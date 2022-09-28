@@ -1,0 +1,129 @@
+ /* *{ border: 1px solid rgba(0,1,1,.5); } */
+ body {
+    padding: 10px;
+    margin: 0;
+    border: solid black;
+  }
+  svg:not(:root) {
+    display: block;
+  }
+  .container {
+    position: absolute;
+    bottom: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    width: 95%;
+    height: 20%;
+    white-space: nowrap;
+    margin: 10px;
+    border: solid black;
+  }
+  .keyboard {
+    width: auto;
+    padding: 1px;
+    margin: 1px;
+    border: 1px solid rgba(1,0,0,.5);
+  }
+  .keyN {
+    z-index: 10;
+    cursor: pointer;
+    font: 10px "Open Sans", "Lucida Grande", "Arial", sans-serif;
+    border: 1px solid green;
+    border-radius: 0px;
+    width: 30px;
+    height: 80px;
+    text-align: center;
+    box-shadow: 2px 2px darkgray;
+    display: inline-block;
+    position: relative;
+    margin-left: -15px;
+    margin-right: -15px;
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    background-color: #000;
+
+  }
+  .key {
+    z-index: 20;
+    cursor: pointer;
+    font: 16px "Open Sans", "Lucida Grande", "Arial", sans-serif;
+    border: 1px solid green;
+    border-radius: 0px;
+    width: 40px;
+    height: 100%;
+    text-align: center;
+    
+    display:  inline-block;
+    position: relative;
+   
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  .key div {
+    position: relative;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+  .keyN div {
+    position: relative;
+    top: 0;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+  }
+  .key div sub {
+    font-size: 10px;
+    pointer-events: none;
+  }
+  .key:hover {
+    background-color: #fff;
+  }
+  .key:active {
+    background-color: #aaa;
+    color: #fff;
+    box-shadow: 2px 2px darkgray;
+  }
+  .octave {
+    display: inline-block;
+    padding: 0 1px 0 0;
+  }
+  .settingsBar {
+    padding-top: 8px;
+    font: 20px "Open Sans", "Lucida Grande", "Arial", sans-serif;
+    position: relative;
+    vertical-align: middle;
+    width: 100%;
+    height: 30px;
+  }
+  .left {
+    width: 50%;
+    position: absolute;
+    left: 0;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .left span, .left input {
+    vertical-align: middle;
+  }
+  .right {
+    width: 50%;
+    position: absolute;
+    right: 0;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .right span {
+    vertical-align: middle;
+  }
+  .right input {
+    vertical-align: baseline;
+  }

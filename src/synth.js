@@ -37,8 +37,8 @@ const setup = () => {
 	compressor.threshold.setValueAtTime(-50, audioContext.currentTime);
 	compressor.knee.setValueAtTime(40, audioContext.currentTime);
 	compressor.ratio.setValueAtTime(12, audioContext.currentTime);
-	compressor.attack.setValueAtTime(0, audioContext.currentTime);
-	compressor.release.setValueAtTime(0.25, audioContext.currentTime);
+	compressor.attack.setValueAtTime(20, audioContext.currentTime);
+	compressor.release.setValueAtTime(-5, audioContext.currentTime);
 
 	/* Inicializar Analizador Visual */
 	analyzer = audioContext.createAnalyser();
@@ -201,14 +201,14 @@ setup();
 compressorControl.addEventListener('change', (e) => {
 
 	if (e.target.checked) {
-		mainGainNode.disconnect(audioContext.destination);
+		mainGainNode.disconnect(analyzer);
 		mainGainNode.connect(compressor);
-		compressor.connect(audioContext.destination);
+		compressor.connect(analyzer);
 	}
 	else {
 		mainGainNode.disconnect(compressor);
-		compressor.disconnect(audioContext.destination);
-		mainGainNode.connect(audioContext.destination);
+		compressor.disconnect(analyzer);
+		mainGainNode.connect(analyzer);
 
 	}
 

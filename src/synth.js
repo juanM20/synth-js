@@ -6,6 +6,7 @@ const oscList = [];
 let mainGainNode = null;
 let compressor = null;
 let analyzer = null;
+let analyzer2 = null;
 
 const keyboard = document.querySelector(".keyboard");
 const wavePicker = document.querySelector("select[name='waveform']");
@@ -42,11 +43,14 @@ const setup = () => {
 
 	/* Inicializar Analizador Visual */
 	analyzer = audioContext.createAnalyser();
+	analyzer2 = audioContext.createAnalyser();
 	analyzer.fftSize = 1024;
+	analyzer2.fftSize = 1024;
 
 	/* Conectar el el nodo principal de ganancia a la salida de audio */
 	mainGainNode.connect(analyzer);
-	analyzer.connect(audioContext.destination);
+	analyzer.connect(analyzer2);
+	analyzer2.connect(audioContext.destination);
 	mainGainNode.gain.value = volumeControl.value;
 
 	/* Crear cada 'tecla' en el DOM */
@@ -149,6 +153,47 @@ const visualize = () => {
 	requestAnimationFrame(visualize.bind(this));
 }
 
+const visualizeFrequencies = () => {
+	//Ajustes del canvas
+	var canvas = document.querySelector('#canvas2');
+	var ctd = canvas.getContext('2d');
+	var ancho = document.getElementById('visualizer2').offsetWidth - 80;
+	canvas.width = ancho;
+	canvas.height = 256;
+	var muestras = new Uint8Array(analyzer.frequencyBinCount);
+	analyzer.getByteFrequencyData(muestras);
+	console.log(muestras.length);
+	//Dibujamos la forma de onda, incluso podríamos calcular su máximo:
+	var max = 0;
+	for (var i = 0; i < muestras.length; i++) {
+		max = muestras[i] > max ? muestras[i] : max;
+	}
+	console.log("maximo:  " + max);
+	max = max - 128
+	for (var i = 0; i < muestras.length; i++) {
+		var valor = muestras[i];
+		var porcentaje = valor / 256;
+		var alto = canvas.height * porcentaje;
+		var offset = canvas.height - alto;
+		var trazo = canvas.width / muestras.length;
+		ctd.fillStyle = "#000";
+		ctd.font = "14px Helvetica";
+		ctd.fillRect(i * trazo, offset, 1, 1);
+		ctd.moveTo(0, 128);
+		ctd.lineTo(ancho, 128);
+		ctd.stroke();
+		ctd.fillText('0', 5, 128)
+		//dibujamaximo(ctd, max);
+		// //El cálculo del máximo valor nos sirve para determinar el pico de dB
+		// document.querySelector('#maximo').innerHTML = max;
+		// dB = 20 * Math.log(Math.max((max / 127), Math.pow(10, -42 / 20))) / Math.LN10;
+		// document.querySelector('#dB').innerHTML = dB;
+		// dBs = 20 * Math.log(0.5) / Math.LN10;
+		// document.querySelector('#dBs').innerHTML = dBs;
+	}
+	requestAnimationFrame(visualizeFrequencies.bind(this));
+}
+
 const playTone = (freq) => {
 	const osc = audioContext.createOscillator();
 	osc.connect(mainGainNode);
@@ -165,6 +210,7 @@ const playTone = (freq) => {
 	osc.start();
 
 	requestAnimationFrame(visualize.bind(this));
+	requestAnimationFrame(visualizeFrequencies.bind(this));
 
 	return osc;
 }

@@ -6,10 +6,10 @@ const oscList = [];
 let mainGainNode = null;
 let compressor = null;
 let analyzer = null;
-let analyzer2 = null;
 
 const keyboard = document.querySelector(".keyboard");
 const wavePicker = document.querySelector("select[name='waveform']");
+const graphPicker = document.querySelector("select[name='graphic-select']");
 const volumeControl = document.querySelector("input[name='volume']");
 const compressorControl = document.querySelector("input[name='check-compressor']");
 
@@ -38,19 +38,16 @@ const setup = () => {
 	compressor.threshold.setValueAtTime(-50, audioContext.currentTime);
 	compressor.knee.setValueAtTime(40, audioContext.currentTime);
 	compressor.ratio.setValueAtTime(12, audioContext.currentTime);
-	compressor.attack.setValueAtTime(20, audioContext.currentTime);
-	compressor.release.setValueAtTime(-5, audioContext.currentTime);
+	compressor.attack.setValueAtTime(.5, audioContext.currentTime);
+	compressor.release.setValueAtTime(.5, audioContext.currentTime);
 
 	/* Inicializar Analizador Visual */
 	analyzer = audioContext.createAnalyser();
-	analyzer2 = audioContext.createAnalyser();
 	analyzer.fftSize = 1024;
-	analyzer2.fftSize = 1024;
 
 	/* Conectar el el nodo principal de ganancia a la salida de audio */
 	mainGainNode.connect(analyzer);
-	analyzer.connect(analyzer2);
-	analyzer2.connect(audioContext.destination);
+	analyzer.connect(audioContext.destination);
 	mainGainNode.gain.value = volumeControl.value;
 
 	/* Crear cada 'tecla' en el DOM */
@@ -121,14 +118,13 @@ const visualize = () => {
 	canvas.height = 256;
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteTimeDomainData(muestras);
-	console.log(muestras.length);
+
 	//Dibujamos la forma de onda, incluso podríamos calcular su máximo:
 	var max = 0;
 	for (var i = 0; i < muestras.length; i++) {
 		max = muestras[i] > max ? muestras[i] : max;
 	}
-	console.log("maximo:  " + max);
-	max = max - 128
+	max = max - 128;
 	for (var i = 0; i < muestras.length; i++) {
 		var valor = muestras[i];
 		var porcentaje = valor / 256;
@@ -155,30 +151,29 @@ const visualize = () => {
 
 const visualizeFrequencies = () => {
 	//Ajustes del canvas
-	var canvas = document.querySelector('#canvas2');
+	var canvas = document.querySelector('#canvas');
 	var ctd = canvas.getContext('2d');
-	var ancho = document.getElementById('visualizer2').offsetWidth - 80;
+	var ancho = document.getElementById('visualizer').offsetWidth - 80;
 	canvas.width = ancho;
 	canvas.height = 256;
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteFrequencyData(muestras);
-	console.log(muestras.length);
+
 	//Dibujamos la forma de onda, incluso podríamos calcular su máximo:
 	var max = 0;
 	for (var i = 0; i < muestras.length; i++) {
 		max = muestras[i] > max ? muestras[i] : max;
 	}
-	console.log("maximo:  " + max);
-	max = max - 128
+	max = max - 128;
 	for (var i = 0; i < muestras.length; i++) {
 		var valor = muestras[i];
 		var porcentaje = valor / 256;
 		var alto = canvas.height * porcentaje;
 		var offset = canvas.height - alto;
-		var trazo = canvas.width / muestras.length;
-		ctd.fillStyle = "#000";
+		var trazo = canvas.width / (muestras.length);
+		ctd.fillStyle = "#399CFF";
 		ctd.font = "14px Helvetica";
-		ctd.fillRect(i * trazo, offset, 1, 1);
+		ctd.fillRect(i * trazo, offset, 20, 20);
 		ctd.moveTo(0, 128);
 		ctd.lineTo(ancho, 128);
 		ctd.stroke();
@@ -194,23 +189,27 @@ const visualizeFrequencies = () => {
 	requestAnimationFrame(visualizeFrequencies.bind(this));
 }
 
+const clearCanvas = () => {
+	var canvas = document.querySelector('#canvas');
+	var ctd = canvas.getContext('2d');
+	ctd.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 const playTone = (freq) => {
 	const osc = audioContext.createOscillator();
 	osc.connect(mainGainNode);
 
 	const type = wavePicker.options[wavePicker.selectedIndex].value;
+	const graph = graphPicker.options[graphPicker.selectedIndex].value;
 
-	if (type === "custom") {
-		osc.setPeriodicWave(customWaveform);
-	} else {
-		osc.type = type;
-	}
+	type === "custom" ? osc.setPeriodicWave(customWaveform) : osc.type = type;
 
 	osc.frequency.value = freq;
 	osc.start();
 
-	requestAnimationFrame(visualize.bind(this));
-	requestAnimationFrame(visualizeFrequencies.bind(this));
+	graph === 'time' ?
+		requestAnimationFrame(visualize.bind(this)) :
+		requestAnimationFrame(visualizeFrequencies.bind(this));
 
 	return osc;
 }
@@ -234,6 +233,7 @@ const noteReleased = (event) => {
 		oscList[octave][dataset["note"]].stop();
 		delete oscList[octave][dataset["note"]];
 		delete dataset["pressed"];
+		clearCanvas();
 	}
 }
 

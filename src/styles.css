@@ -7,6 +7,16 @@
   svg:not(:root) {
     display: block;
   }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container-instrument {
+    display: flex;
+    flex-direction: column;
+  }
   .container {
     position: absolute;
     bottom: 0;
@@ -25,10 +35,10 @@
     border: 1px solid rgba(1,0,0,.5);
   }
   .keyN {
-    z-index: 10;
+    z-index: 1;
     cursor: pointer;
     font: 10px "Open Sans", "Lucida Grande", "Arial", sans-serif;
-    border: 1px solid green;
+    border: 1px solid rgb(117, 118, 119);
     border-radius: 0px;
     width: 30px;
     height: 80px;
@@ -47,10 +57,10 @@
 
   }
   .key {
-    z-index: 20;
+    z-index: 0;
     cursor: pointer;
     font: 16px "Open Sans", "Lucida Grande", "Arial", sans-serif;
-    border: 1px solid green;
+    border: 1px solid rgb(50, 50, 50);
     border-radius: 0px;
     width: 40px;
     height: 100%;
@@ -59,7 +69,6 @@
     display:  inline-block;
     position: relative;
    
-    
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -78,7 +87,7 @@
     top: 0;
     text-align: center;
     width: 100%;
-    pointer-events: none;
+    
   }
   .key div sub {
     font-size: 10px;
@@ -103,27 +112,16 @@
     vertical-align: middle;
     width: 100%;
     height: 30px;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
   }
-  .left {
-    width: 50%;
-    position: absolute;
-    left: 0;
-    display: table-cell;
-    vertical-align: middle;
-  }
-  .left span, .left input {
-    vertical-align: middle;
-  }
-  .right {
-    width: 50%;
-    position: absolute;
-    right: 0;
-    display: table-cell;
-    vertical-align: middle;
-  }
-  .right span {
-    vertical-align: middle;
-  }
-  .right input {
-    vertical-align: baseline;
+
+  .settings {
+    display: block;
+    position: fixed;
+    bottom: 15rem;
   }

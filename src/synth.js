@@ -99,16 +99,6 @@ const createKey = (note, octave, freq, tipoKey) => {
 	return keyElement;
 }
 
-const dibujamaximo = (c, m) => {
-	c.beginPath();
-	c.moveTo(0, 128 + m);
-	c.lineTo(20, 128 + m);
-	var a = 128 + m;
-	c.fillStyle = "rgb(25,255,0)";
-	c.fillText(m, 5, a);
-	c.stroke();
-}
-
 const visualize = () => {
 	//Ajustes del canvas
 	var canvas = document.querySelector('#canvas');
@@ -119,34 +109,22 @@ const visualize = () => {
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteTimeDomainData(muestras);
 
-	//Dibujamos la forma de onda, incluso podríamos calcular su máximo:
-	var max = 0;
-	for (var i = 0; i < muestras.length; i++) {
-		max = muestras[i] > max ? muestras[i] : max;
-	}
-	max = max - 128;
 	for (var i = 0; i < muestras.length; i++) {
 		var valor = muestras[i];
 		var porcentaje = valor / 256;
 		var alto = canvas.height * porcentaje;
 		var offset = canvas.height - alto;
 		var trazo = canvas.width / muestras.length;
-		ctd.fillStyle = "#000";
+		ctd.fillStyle = "#399CFF";
 		ctd.font = "14px Helvetica";
-		ctd.fillRect(i * trazo, offset, 1, 1);
+		ctd.fillRect(i * trazo, offset, 5, 5);
 		ctd.moveTo(0, 128);
 		ctd.lineTo(ancho, 128);
 		ctd.stroke();
 		ctd.fillText('0', 5, 128)
-		//dibujamaximo(ctd, max);
-		// //El cálculo del máximo valor nos sirve para determinar el pico de dB
-		// document.querySelector('#maximo').innerHTML = max;
-		// dB = 20 * Math.log(Math.max((max / 127), Math.pow(10, -42 / 20))) / Math.LN10;
-		// document.querySelector('#dB').innerHTML = dB;
-		// dBs = 20 * Math.log(0.5) / Math.LN10;
-		// document.querySelector('#dBs').innerHTML = dBs;
+
 	}
-	requestAnimationFrame(visualize.bind(this));
+	requestAnimationFrame(visualize);
 }
 
 const visualizeFrequencies = () => {
@@ -159,34 +137,28 @@ const visualizeFrequencies = () => {
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteFrequencyData(muestras);
 
-	//Dibujamos la forma de onda, incluso podríamos calcular su máximo:
-	var max = 0;
+	ctd.fillStyle = "#399CFF";
+	ctd.font = "14px Helvetica";
+	ctd.clearRect(0, 0, canvas.width, canvas.height);
+
 	for (var i = 0; i < muestras.length; i++) {
-		max = muestras[i] > max ? muestras[i] : max;
-	}
-	max = max - 128;
-	for (var i = 0; i < muestras.length; i++) {
-		var valor = muestras[i];
-		var porcentaje = valor / 256;
-		var alto = canvas.height * porcentaje;
-		var offset = canvas.height - alto;
-		var trazo = canvas.width / (muestras.length);
-		ctd.fillStyle = "#399CFF";
-		ctd.font = "14px Helvetica";
-		ctd.fillRect(i * trazo, offset, 20, 20);
-		ctd.moveTo(0, 128);
-		ctd.lineTo(ancho, 128);
-		ctd.stroke();
+		// var valor = muestras[i];
+		// var porcentaje = valor / 256;
+		// var alto = canvas.height * porcentaje;
+		// var offset = canvas.height - alto;
+		// var trazo = canvas.width / (muestras.length);
+		// ctd.fillRect(i * trazo, offset, 5, 5);
+		// ctd.moveTo(0, 128);
+		// ctd.lineTo(ancho, 128);
+		// ctd.stroke();
+
+		var bar_x = i * 3;
+		var bar_width = 2;
+		var bar_height = -(muestras[i] / 2);
+		ctd.fillRect(bar_x, canvas.height, bar_width, bar_height);
 		ctd.fillText('0', 5, 128)
-		//dibujamaximo(ctd, max);
-		// //El cálculo del máximo valor nos sirve para determinar el pico de dB
-		// document.querySelector('#maximo').innerHTML = max;
-		// dB = 20 * Math.log(Math.max((max / 127), Math.pow(10, -42 / 20))) / Math.LN10;
-		// document.querySelector('#dB').innerHTML = dB;
-		// dBs = 20 * Math.log(0.5) / Math.LN10;
-		// document.querySelector('#dBs').innerHTML = dBs;
 	}
-	requestAnimationFrame(visualizeFrequencies.bind(this));
+	requestAnimationFrame(visualizeFrequencies);
 }
 
 const clearCanvas = () => {
@@ -208,8 +180,8 @@ const playTone = (freq) => {
 	osc.start();
 
 	graph === 'time' ?
-		requestAnimationFrame(visualize.bind(this)) :
-		requestAnimationFrame(visualizeFrequencies.bind(this));
+		requestAnimationFrame(visualize) :
+		requestAnimationFrame(visualizeFrequencies);
 
 	return osc;
 }

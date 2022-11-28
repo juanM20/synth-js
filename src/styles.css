@@ -111,17 +111,24 @@
     position: relative;
     vertical-align: middle;
     width: 100%;
-    height: 30px;
+    height: 40px;
     
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-around;
     align-items: baseline;
+    gap: 10px 30px;
   }
 
   .settings {
     display: block;
     position: fixed;
-    bottom: 15rem;
+    bottom: 25rem;
+  }
+
+  .envelope-section {
+    display: flex;
+    flex-direction: column;
+
   }

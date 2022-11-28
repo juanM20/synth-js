@@ -4,6 +4,7 @@ import createNoteTable from "./noteTable.js";
 const audioContext = new AudioContext();
 const oscList = [];
 let mainGainNode = null;
+let gateGain = null;
 let compressor = null;
 let analyzer = null;
 
@@ -12,6 +13,13 @@ const wavePicker = document.querySelector("select[name='waveform']");
 const graphPicker = document.querySelector("select[name='graphic-select']");
 const volumeControl = document.querySelector("input[name='volume']");
 const compressorControl = document.querySelector("input[name='check-compressor']");
+const attackInput = document.querySelector("input[name='attack-input']");
+const decayInput = document.querySelector("input[name='decay-input']");
+const sustainInput = document.querySelector("input[name='sustain-input']");
+const releaseInput = document.querySelector("input[name='release-input']");
+
+const MAX_TIME = 2;
+const ADSR = { attack: 0.2, decay: 0, sustain: 1, release: 0.3 };
 
 let noteFreq = null;
 let customWaveform = null;
@@ -142,16 +150,6 @@ const visualizeFrequencies = () => {
 	ctd.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (var i = 0; i < muestras.length; i++) {
-		// var valor = muestras[i];
-		// var porcentaje = valor / 256;
-		// var alto = canvas.height * porcentaje;
-		// var offset = canvas.height - alto;
-		// var trazo = canvas.width / (muestras.length);
-		// ctd.fillRect(i * trazo, offset, 5, 5);
-		// ctd.moveTo(0, 128);
-		// ctd.lineTo(ancho, 128);
-		// ctd.stroke();
-
 		var bar_x = i * 3;
 		var bar_width = 2;
 		var bar_height = -(muestras[i] / 2);
@@ -168,8 +166,22 @@ const clearCanvas = () => {
 }
 
 const playTone = (freq) => {
+
 	const osc = audioContext.createOscillator();
-	osc.connect(mainGainNode);
+	gateGain = audioContext.createGain();
+	gateGain.gain.value = 0;
+	osc.connect(gateGain);
+	gateGain.connect(mainGainNode);
+
+	const now = audioContext.currentTime;
+	const atkDuration = ADSR.attack * MAX_TIME;
+	const atkEndTime = now + atkDuration;
+	const decayDuration = ADSR.decay + MAX_TIME;
+
+	gateGain.gain.cancelScheduledValues(audioContext.currentTime);
+	gateGain.gain.setValueAtTime(0, audioContext.currentTime);
+	gateGain.gain.linearRampToValueAtTime(1, atkEndTime);
+	gateGain.gain.setTargetAtTime(ADSR.sustain, atkEndTime, decayDuration);
 
 	const type = wavePicker.options[wavePicker.selectedIndex].value;
 	const graph = graphPicker.options[graphPicker.selectedIndex].value;
@@ -198,11 +210,23 @@ const notePressed = (event) => {
 	}
 }
 
+const playToneOff = (osc) => {
+	gateGain.gain.cancelScheduledValues(audioContext.currentTime);
+	const now = audioContext.currentTime;
+	const relDuration = ADSR.release * MAX_TIME;
+	const relEndTime = now + relDuration;
+	gateGain.gain.setValueAtTime(gateGain.gain.value, now);
+	gateGain.gain.linearRampToValueAtTime(0, relEndTime);
+	setTimeout(() => {
+		osc.disconnect();
+	}, 10000);
+}
+
 const noteReleased = (event) => {
 	const dataset = event.target.dataset;
 	if (dataset && dataset["pressed"]) {
 		const octave = Number(dataset["octave"]);
-		oscList[octave][dataset["note"]].stop();
+		playToneOff(oscList[octave][dataset["note"]]);
 		delete oscList[octave][dataset["note"]];
 		delete dataset["pressed"];
 		clearCanvas();
@@ -230,5 +254,20 @@ compressorControl.addEventListener('change', (e) => {
 
 	}
 
+});
+
+attackInput.addEventListener('change', e => {
+	ADSR.attack = e.target.value;
+});
+
+decayInput.addEventListener('change', e => {
+	ADSR.decay = e.target.value;
 })
 
+sustainInput.addEventListener('change', e => {
+	ADSR.sustain = e.target.value;
+})
+
+releaseInput.addEventListener('change', e => {
+	ADSR.release = e.target.value;
+})

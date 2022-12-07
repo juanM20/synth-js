@@ -13,17 +13,26 @@
     flex-direction: column;
   }
 
+  .visualizer {
+    flex: 2 1 500px;
+  }
+
   .container-instrument {
     display: flex;
     flex-direction: column;
+    flex: 1 1 420px;
+    background-color: #212121;
+    color: #d5d5d5;
+    border: 20px ridge #75482D;
+    border-radius: 20px;
   }
   .container {
     position: absolute;
     bottom: 0;
     overflow-x: scroll;
     overflow-y: hidden;
-    width: 95%;
     height: 20%;
+    max-width: 93%;
     white-space: nowrap;
     margin: 10px;
     border: solid black;
@@ -61,6 +70,7 @@
     cursor: pointer;
     font: 16px "Open Sans", "Lucida Grande", "Arial", sans-serif;
     border: 1px solid rgb(50, 50, 50);
+    background-color: rgb(255, 255, 255);
     border-radius: 0px;
     width: 40px;
     height: 100%;
@@ -122,9 +132,9 @@
   }
 
   .settings {
-    display: block;
-    position: fixed;
-    bottom: 25rem;
+    padding: 20px;
+    border: 10px solid rgb(203, 203, 203);
+    height: 140px;
   }
 
   .envelope-section {

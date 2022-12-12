@@ -27,11 +27,9 @@
     border-radius: 20px;
   }
   .container {
-    position: fixed;
-    bottom: 24px;
     overflow-x: scroll;
     overflow-y: hidden;
-    height: 20%;
+    height: 46%;
     max-width: 93%;
     white-space: nowrap;
     margin: 10px;
@@ -117,7 +115,7 @@
   }
   .settingsBar {
     padding-top: 8px;
-    font: 20px "Open Sans", "Lucida Grande", "Arial", sans-serif;
+    font: 14px "Open Sans", "Lucida Grande", "Arial", sans-serif;
     position: relative;
     vertical-align: middle;
     width: 100%;

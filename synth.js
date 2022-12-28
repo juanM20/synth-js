@@ -153,7 +153,7 @@ const visualizeFrequencies = () => {
 		var bar_x = i * 3;
 		var bar_width = 2;
 		var bar_height = -(muestras[i] / 2);
-		ctd.fillRect(bar_x, canvas.height, bar_width, bar_height);
+		ctd.fillRect(bar_x + 50, canvas.height, bar_width, bar_height);
 		ctd.fillText('0', 5, 128)
 	}
 	requestAnimationFrame(visualizeFrequencies);

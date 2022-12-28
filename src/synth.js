@@ -123,7 +123,7 @@ const visualize = () => {
 		var alto = canvas.height * porcentaje;
 		var offset = canvas.height - alto;
 		var trazo = canvas.width / muestras.length;
-		ctd.fillStyle = "#62778D";
+		ctd.fillStyle = "#dcdcdc";
 		ctd.font = "14px Helvetica";
 		ctd.fillRect(i * trazo, offset, 5, 5);
 		ctd.moveTo(0, 128);
@@ -145,7 +145,7 @@ const visualizeFrequencies = () => {
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteFrequencyData(muestras);
 
-	ctd.fillStyle = "#62778D";
+	ctd.fillStyle = "#dcdcdc";
 	ctd.font = "14px Helvetica";
 	ctd.clearRect(0, 0, canvas.width, canvas.height);
 

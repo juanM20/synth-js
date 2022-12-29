@@ -106,6 +106,86 @@ const createKey = (note, octave, freq, tipoKey) => {
 
 	return keyElement;
 }
+const beginPathTime = (ctx) => {
+
+	ctx.fillText("105%", 0, 64);
+	ctx.fillText("70db", 0, 128);
+	ctx.fillText("35%", 0, 192);
+	ctx.fillText("25%", 336, 255);
+	ctx.fillText("50%", 672, 255);
+	ctx.fillText("75%", 1008, 255);
+	ctx.beginPath();
+	//empieza con eje x
+	ctx.moveTo(0, 75);
+	ctx.lineTo(700, 75);
+	ctx.moveTo(0, 150);
+	ctx.lineTo(700, 150);
+	ctx.moveTo(0, 225);
+	ctx.lineTo(700, 225);
+	// empezamos con y
+	ctx.moveTo(70, 290);
+	ctx.lineTo(70, 0);
+	ctx.moveTo(140, 290);
+	ctx.lineTo(140, 0);
+	ctx.moveTo(210, 290);
+	ctx.lineTo(210, 0);
+	ctx.moveTo(280, 290);
+	ctx.lineTo(280, 0);
+	ctx.moveTo(350, 290);
+	ctx.lineTo(350, 0);
+	ctx.moveTo(420, 290);
+	ctx.lineTo(420, 0);
+	ctx.moveTo(490, 290);
+	ctx.lineTo(490, 0);
+	ctx.moveTo(560, 290);
+	ctx.lineTo(560, 0);
+	ctx.moveTo(630, 290);
+	ctx.lineTo(630, 0);
+
+	ctx.stroke();
+	ctx.closePath();
+}
+
+const beginPathFreq = (ctx) => {
+
+	ctx.fillText("140 db", 0, 10);
+	ctx.fillText("105 db", 0, 64);
+	ctx.fillText("70 db", 0, 128);
+	ctx.fillText("35 db", 0, 192);
+	// ctx.fillText("25 Hz", 336, 10);
+	// ctx.fillText("50 Hz", 672, 10);
+	// ctx.fillText("7 Hz", 1008, 10);
+	ctx.beginPath();
+	//empieza con eje x
+	ctx.moveTo(0, 75);
+	ctx.lineTo(1344, 75);
+	ctx.moveTo(0, 150);
+	ctx.lineTo(1344, 150);
+	ctx.moveTo(0, 225);
+	ctx.lineTo(1344, 225);
+	// empezamos con y
+	ctx.moveTo(70, 290);
+	ctx.lineTo(70, 0);
+	ctx.moveTo(140, 290);
+	ctx.lineTo(140, 0);
+	ctx.moveTo(210, 290);
+	ctx.lineTo(210, 0);
+	ctx.moveTo(280, 290);
+	ctx.lineTo(280, 0);
+	ctx.moveTo(350, 290);
+	ctx.lineTo(350, 0);
+	ctx.moveTo(420, 290);
+	ctx.lineTo(420, 0);
+	ctx.moveTo(490, 290);
+	ctx.lineTo(490, 0);
+	ctx.moveTo(560, 290);
+	ctx.lineTo(560, 0);
+	ctx.moveTo(630, 290);
+	ctx.lineTo(630, 0);
+
+	ctx.stroke();
+	ctx.closePath();
+}
 
 const visualize = () => {
 	//Ajustes del canvas
@@ -114,6 +194,12 @@ const visualize = () => {
 	var ancho = document.getElementById('visualizer').offsetWidth - 80;
 	canvas.width = ancho;
 	canvas.height = 256;
+	ctd.fillStyle = "#dcdcdc";
+	ctd.font = "14px Helvetica";
+	ctd.clearRect(0, 0, canvas.width, canvas.height);
+
+	beginPathTime(ctd);
+
 	var muestras = new Uint8Array(analyzer.frequencyBinCount);
 	analyzer.getByteTimeDomainData(muestras);
 
@@ -123,13 +209,10 @@ const visualize = () => {
 		var alto = canvas.height * porcentaje;
 		var offset = canvas.height - alto;
 		var trazo = canvas.width / muestras.length;
-		ctd.fillStyle = "#dcdcdc";
-		ctd.font = "14px Helvetica";
 		ctd.fillRect(i * trazo, offset, 5, 5);
 		ctd.moveTo(0, 128);
 		ctd.lineTo(ancho, 128);
 		ctd.stroke();
-		ctd.fillText('0', 5, 128)
 
 	}
 	requestAnimationFrame(visualize);
@@ -149,12 +232,13 @@ const visualizeFrequencies = () => {
 	ctd.font = "14px Helvetica";
 	ctd.clearRect(0, 0, canvas.width, canvas.height);
 
+	beginPathFreq(ctd);
+
 	for (var i = 0; i < muestras.length; i++) {
 		var bar_x = i * 3;
 		var bar_width = 2;
-		var bar_height = -(muestras[i] / 2);
+		var bar_height = -(muestras[i] * mainGainNode.gain.value);
 		ctd.fillRect(bar_x + 50, canvas.height, bar_width, bar_height);
-		ctd.fillText('0', 5, 128)
 	}
 	requestAnimationFrame(visualizeFrequencies);
 }
@@ -234,7 +318,7 @@ const noteReleased = (event) => {
 }
 
 const changeVolume = (event) => {
-	mainGainNode.gain.value = volumeControl.value
+	mainGainNode.gain.value = volumeControl.value;
 }
 
 /* Iniciar ambiente de Web Audio API  */

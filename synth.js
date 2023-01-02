@@ -17,6 +17,8 @@ const attackInput = document.querySelector("input[name='attack-input']");
 const decayInput = document.querySelector("input[name='decay-input']");
 const sustainInput = document.querySelector("input[name='sustain-input']");
 const releaseInput = document.querySelector("input[name='release-input']");
+const customWaveButton = document.getElementById('custom-wave-button');
+const argsInput = document.getElementById('custom-args-input');
 
 const MAX_TIME = 2;
 const ADSR = { attack: 0.2, decay: 0, sustain: 1, release: 0.3 };
@@ -346,12 +348,21 @@ attackInput.addEventListener('change', e => {
 
 decayInput.addEventListener('change', e => {
 	ADSR.decay = e.target.value;
-})
+});
 
 sustainInput.addEventListener('change', e => {
 	ADSR.sustain = e.target.value;
-})
+});
 
 releaseInput.addEventListener('change', e => {
 	ADSR.release = e.target.value;
-})
+});
+
+customWaveButton.addEventListener('click', e => {
+	const args = argsInput.value.split(',');
+	const real = new Float32Array(args);
+	const imag = new Float32Array(real.length);
+
+	customWaveform = audioContext.createPeriodicWave(real, imag);
+	console.log(customWaveform);
+});

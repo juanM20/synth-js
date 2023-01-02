@@ -33,7 +33,7 @@
     overflow-x: scroll;
     overflow-y: hidden;
     height: 46%;
-    max-width: 93%;
+    width: 95%;
     white-space: nowrap;
     margin: 10px;
     border: solid black;
@@ -118,29 +118,35 @@
   }
   .settingsBar {
     padding-top: 8px;
-    font: 14px "Open Sans", "Lucida Grande", "Arial", sans-serif;
+    font: 24px "Open Sans", "Lucida Grande", "Arial", sans-serif;
     position: relative;
     vertical-align: middle;
-    width: 100%;
-    height: 40px;
-    
+    width: 100%;    
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    align-items: baseline;
-    gap: 10px 30px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0px 75px;
   }
 
   .settings {
     padding: 20px;
     border: 10px solid rgb(203, 203, 203);
-    height: 140px;
+    height: 180px;
+  }
+
+  .wave-section select {
+    font-size: 20px;
+  }
+
+  .graphic-section select {
+    font-size: 20px;
   }
 
   .envelope-section {
     display: flex;
     flex-direction: column;
+    font-size: 18px;
 
   }
 

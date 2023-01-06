@@ -159,7 +159,7 @@
                     if (nodeIndex == 1) //ataque 
                     {
                         ctx.clearRect(0,0,700,300);
-                        if (event.clientX <= poligono[2][0] && event.clientY <= 290) {
+                        if (event.clientX <= poligono[2][0] && event.clientY <= 290 && event.clientY>=0 && event.clientY<= poligono[2][1]) {
                             poligono[nodeIndex][0] = event.clientX;
                             poligono[nodeIndex][1] = event.clientY;
                         }
@@ -167,10 +167,11 @@
                     else if (nodeIndex == 2) //decaimiento
                     {
                         ctx.clearRect(0,0,700,300);
-                        if (event.clientX >= poligono[1][0] && event.clientX <= poligono[3][0])
+                        if (event.clientX >= poligono[1][0] && event.clientX <= poligono[3][0] && event.clientY>=poligono[1][1] && event.clientY<= poligono[4][1])
                         {
                             poligono[nodeIndex][0] = event.clientX;
                             poligono[nodeIndex][1] = event.clientY;
+                            actualizar();
                         }
                     }
                     else if (nodeIndex == 3)
@@ -183,13 +184,16 @@
                     else if (nodeIndex == 4) //decaimiento
                     {
                         ctx.clearRect(0,0,700,300);
-                        if (event.clientX >= poligono[3][0] && event.clientX <= 690 && event.clientY <= 290)
+                        if (event.clientX >= poligono[3][0] && event.clientX <= 690 && event.clientY <= 290 && event.clientY>=poligono[3][1] && event.clientY<=290)
                         {
                             poligono[nodeIndex][0] = event.clientX;
                             poligono[nodeIndex][1] = event.clientY;
                         }
                     }
                 } //condicional null
+                function actualizar(event){
+                    poligono[3][1] = poligono[2][1];
+                }
                     dibujaPoligono(poligono);
             } // funcion
 

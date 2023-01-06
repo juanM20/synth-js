@@ -154,3 +154,19 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .lienzo-envelope {
+    display: none;
+    z-index: 10;
+    position: fixed;
+  }
+
+  .btn-envelope {
+    display: none;
+    position: fixed;
+    top: 50px;
+    right: 120px;
+    z-index: 10;
+    width: 150px;
+    height: 65px;
+  }

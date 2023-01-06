@@ -18,7 +18,8 @@ const decayInput = document.querySelector("input[name='decay-input']");
 const sustainInput = document.querySelector("input[name='sustain-input']");
 const releaseInput = document.querySelector("input[name='release-input']");
 const customWaveButton = document.getElementById('custom-wave-button');
-const argsInput = document.getElementById('custom-args-input');
+const sinInput = document.getElementById('sin-input');
+const cosInput = document.getElementById('cos-input');
 
 const MAX_TIME = 2;
 const ADSR = { attack: 0.2, decay: 0, sustain: 1, release: 0.3 };
@@ -45,7 +46,7 @@ const setup = () => {
 
 	/* Inicializar compresión ADSR */
 	compressor = audioContext.createDynamicsCompressor();
-	compressor.threshold.setValueAtTime(-50, audioContext.currentTime);
+	compressor.threshold.setValueAtTime(-80, audioContext.currentTime);
 	compressor.knee.setValueAtTime(40, audioContext.currentTime);
 	compressor.ratio.setValueAtTime(12, audioContext.currentTime);
 	compressor.attack.setValueAtTime(.5, audioContext.currentTime);
@@ -448,10 +449,20 @@ releaseInput.addEventListener('change', e => {
 });
 
 customWaveButton.addEventListener('click', e => {
-	const args = argsInput.value.split(',');
-	const real = new Float32Array(args);
-	const imag = new Float32Array(real.length);
+	const args1 = sinInput.value.split(',');
+	const args2 = cosInput.value.split(',');
+	let sin = [];
+	let cos = [];
 
-	customWaveform = audioContext.createPeriodicWave(real, imag);
-	console.log(customWaveform);
+	if (args1 === '0') {
+		cos = new Float32Array(args2);
+		sin = new Float32Array(args2.length);
+	} else if (args2 == '0') {
+		sin = new Float32Array(args1);
+		cos = new Float32Array(args1.length);
+	} else {
+		sin = new Float32Array(args1);
+		cos = new Float32Array(args2);
+	}
+	customWaveform = audioContext.createPeriodicWave(cos, sin);
 });

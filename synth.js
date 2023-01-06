@@ -448,13 +448,13 @@ customWaveButton.addEventListener('click', e => {
 	let sin = [];
 	let cos = [];
 
-	if (args1 === '0') {
+	if (args1 == '0') {
 		cos = new Float32Array(args2);
 		sin = new Float32Array(args2.length);
 	} else if (args2 == '0') {
 		sin = new Float32Array(args1);
 		cos = new Float32Array(args1.length);
-	} else {
+	} else if (args1 == '0' && args2 == '0') {
 		sin = new Float32Array(args1);
 		cos = new Float32Array(args2);
 	}

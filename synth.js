@@ -426,22 +426,6 @@ activeControl.addEventListener('click', (e) => {
 
 });
 
-// attackInput.addEventListener('change', e => {
-// 	ADSR.attack = e.target.value;
-// });
-
-// decayInput.addEventListener('change', e => {
-// 	ADSR.decay = e.target.value;
-// });
-
-// sustainInput.addEventListener('change', e => {
-// 	ADSR.sustain = e.target.value;
-// });
-
-// releaseInput.addEventListener('change', e => {
-// 	ADSR.release = e.target.value;
-// });
-
 customWaveButton.addEventListener('click', e => {
 	const args1 = sinInput.value.split(',');
 	const args2 = cosInput.value.split(',');
@@ -454,7 +438,7 @@ customWaveButton.addEventListener('click', e => {
 	} else if (args2 == '0') {
 		sin = new Float32Array(args1);
 		cos = new Float32Array(args1.length);
-	} else if (args1 == '0' && args2 == '0') {
+	} else if (args1 != '0' && args2 != '0') {
 		sin = new Float32Array(args1);
 		cos = new Float32Array(args2);
 	}
